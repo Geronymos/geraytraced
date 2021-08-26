@@ -8,9 +8,11 @@ size = (100, 100)
 
 def shader(x,y):
     uv = (np.array([x,y]) / np.array(size))
-    wave = np.sin(uv * 10)
-    result = wave * 255
-    return tuple(np.array((*result,0), dtype='i'))
+    u, v = uv - 0.5
+    circle = (math.sqrt( u **2 + v ** 2 ) > .5) * 255
+    result = circle
+    print(result)
+    return tuple(np.array((circle, circle, circle), dtype='i'))
 
 def newImg():
     img = Image.new('RGB', size)
