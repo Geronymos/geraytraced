@@ -1,11 +1,16 @@
+#!/bin/python
+
 from PIL import Image
+import numpy as np
 import math
 
 size = (100, 100)
 
 def shader(x,y):
-    r = int(math.sin(x)*255)
-    return (r,r,r)
+    uv = (np.array([x,y]) / np.array(size))
+    wave = np.sin(uv * 10)
+    result = wave * 255
+    return tuple(np.array((*result,0), dtype='i'))
 
 def newImg():
     img = Image.new('RGB', size)
