@@ -29,17 +29,17 @@ def shader(x,y,t):
     ray = Ray(player.origin, 
             y_rotation(z_rotation(player.direction, rotation[0] * math.pi/2), rotation[1] * math.pi/2)
     )
-
-    print(ray.direction)
     
     # http://kylehalladay.com/blog/tutorial/math/2013/12/24/Ray-Sphere-Intersection.html
     """ calculate the distance between the ray and sphere origin to see if its in the radius of the sphere (intersecting) """
     L = sphere.origin - ray.origin 
     tc = np.dot(L, ray.direction)
-    d = np.sqrt(tc ** 2 - np.linalg.norm(L) ** 2)
+    d = np.sqrt(np.linalg.norm(L) ** 2 - tc ** 2)
     
     result = (d > sphere.radius ) * 255
     
+    print(L, tc, d)
+
     return tuple(np.array((result, result, result), dtype='i'))
 
 """ Basic shader for testing (output uv) """
