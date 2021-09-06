@@ -3,8 +3,8 @@
 
 // from https://glusoft.com/tutorials/sfml/shader-example
 int main() {
-	const float winW = 800;
-	const float winH = 600;
+	float winW = 800;
+	float winH = 600;
 
 	sf::RenderWindow window(sf::VideoMode(winW, winH), "SFML Shader Example");
 	// window.setMouseCursorVisible(false); // hide the cursor
@@ -21,9 +21,6 @@ int main() {
 		std::cout << "The shader is not available\n";
 	}
 
-	// Set the resolution parameter (the resoltion is divided to make the fire smaller)
-	shader.setUniform("resolution", sf::Vector2f(winW, winH));
-
 	// Use a timer to obtain the time elapsed
 	sf::Clock clk;
 	clk.restart(); // start the timer
@@ -34,15 +31,23 @@ int main() {
 
 		while (window.pollEvent(event)) {
 			// Exit the app when a key is pressed
-			if (event.type == sf::Event::KeyPressed) 
-				window.close();
+			switch ( event.type ) {
+				case sf::Event::KeyPressed: 
+					// window.close();
+				case sf::Event::Resized: 
+					// Set the resolution parameter (the resoltion is divided to make the fire smaller)
+					winW = event.size.width;
+					winH = event.size.height;
+					shader.setUniform("resolution", sf::Vector2f(winW, winH));
+			}
+				
 		}
 
 		// Set the others parameters who need to be updated every frames
 		shader.setUniform("time", clk.getElapsedTime().asSeconds());
 
 		sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-		shader.setUniform("mouse", sf::Vector2f(mousePos.x, mousePos.y));
+		shader.setUniform("mouse", sf::Vector2f(mousePos.x, winH - mousePos.y));
 
 		// Draw the sprite with the shader on it
 		window.clear();
