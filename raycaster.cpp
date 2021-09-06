@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-# from https://glusoft.com/tutorials/sfml/shader-example
+// from https://glusoft.com/tutorials/sfml/shader-example
 int main() {
 	const float winW = 800;
 	const float winH = 600;
