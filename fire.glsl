@@ -8,7 +8,9 @@ uniform vec2 resolution;
 
 void main( void ) {	
 	vec2 uv = gl_FragCoord.xy / resolution.xy;
-	
-	gl_FragColor = vec4( uv, 0.0 , 1.0);
+	vec2 umouse = mouse.xy / resolution.xy;
+	bool cursor = length(uv) < 1.0;
+
+	gl_FragColor = vec4( cursor, cursor,cursor , 1.0);
 	
 }

@@ -7,7 +7,7 @@ int main() {
 	const float winH = 600;
 
 	sf::RenderWindow window(sf::VideoMode(winW, winH), "SFML Shader Example");
-	window.setMouseCursorVisible(false); // hide the cursor
+	// window.setMouseCursorVisible(false); // hide the cursor
 
 	// Create a texture and a sprite for the shader
 	sf::Texture tex;
@@ -22,7 +22,7 @@ int main() {
 	}
 
 	// Set the resolution parameter (the resoltion is divided to make the fire smaller)
-	shader.setUniform("resolution", sf::Vector2f(winW / 2, winH / 2));
+	shader.setUniform("resolution", sf::Vector2f(winW, winH));
 
 	// Use a timer to obtain the time elapsed
 	sf::Clock clk;
@@ -42,7 +42,7 @@ int main() {
 		shader.setUniform("time", clk.getElapsedTime().asSeconds());
 
 		sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-		shader.setUniform("mouse", sf::Vector2f(mousePos.x, mousePos.y - winH/2));
+		shader.setUniform("mouse", sf::Vector2f(mousePos.x, mousePos.y));
 
 		// Draw the sprite with the shader on it
 		window.clear();
