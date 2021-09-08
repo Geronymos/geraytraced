@@ -77,7 +77,7 @@ void main( void ) {
 		vec3 P1 = ray.origin + ray.direction * t1;
 
 		vec3 normal = normalize(sphere.origin - P1);
-		light = dot(normal, vec3(1.,sin(time) * 4,0.)) *.1;
+		light = dot(normal, vec3(1., umouse.x*2-1, umouse.y*-2-1)) *.1;
 
 		
 	}
