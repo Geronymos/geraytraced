@@ -68,8 +68,20 @@ void main( void ) {
 	float tc = dot(L, ray.direction);
 	float d = sqrt(pow(length(L),2) - pow(tc,2) );
 
-	bool r = ( d > sphere.radius );
+	float light = 0.1;
 
-	gl_FragColor = vec4( r,r,r, 1.0);
+	if ( d < sphere.radius ) {
+		//solve for t1c
+		float t1c = sqrt( pow(sphere.radius,2) - pow(d,2) );
+		float t1 = tc - t1c;
+		vec3 P1 = ray.origin + ray.direction * t1;
+
+		vec3 normal = normalize(sphere.origin - P1);
+		light = dot(normal, vec3(1.,sin(time) * 4,0.)) *.1;
+
+		
+	}
+
+	gl_FragColor = vec4( light, light, light, 1.0);
 	
 }
