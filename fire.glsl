@@ -18,6 +18,12 @@ struct Sphere {
 	float radius;
 };
 
+struct Intersection {
+	bool intersects;
+	vec3 point1;
+	vec3 normal; 
+};
+
 // np.clip = clamp()
 vec3 x_rot(vec3 v, float r) {
 	mat3 R = mat3(
@@ -46,6 +52,34 @@ vec3 z_rot(vec3 v, float r) {
 	return R * v;
 }
 
+// return (is_intersecting, intersection_point, normal)
+Intersection intersect(Ray ray, Sphere sphere) {
+	Intersection intersection = {false, 0,0};
+
+	vec3 L = sphere.origin - ray.origin;
+	float tc = dot(L, ray.direction);
+
+	if ( tc < 0.0 ) return intersection;
+
+	float d = sqrt(pow(length(L),2) - pow(tc,2) );
+
+	if ( d > sphere.radius ) return intersection;
+
+	//solve for t1c
+	float t1c = sqrt( pow(sphere.radius,2) - pow(d,2) );
+	float t1 = tc - t1c;
+	vec3 P1 = ray.origin + ray.direction * t1;
+	// add second point
+
+	vec3 normal = normalize(sphere.origin - P1);
+
+	intersection.intersects = true;
+	intersection.point1 = P1;
+	intersection.normal = normal;
+
+	return intersection;
+}
+
 void main( void ) {	
 
 	vec2 uv = gl_FragCoord.xy / resolution.xy;
@@ -64,24 +98,19 @@ void main( void ) {
 	ray.origin = player.origin;
 	ray.direction = y_rot(z_rot(player.direction, rotation.x * PI/2), rotation.y * PI/2);
 
-	vec3 L = sphere.origin - ray.origin;
-	float tc = dot(L, ray.direction);
-	float d = sqrt(pow(length(L),2) - pow(tc,2) );
+	Intersection intersection = intersect(ray, sphere);
 
-	float light = 0.1;
+	float red = 0.1;
+	float green = 0.1;
+	float blue = 0.1;
 
-	if ( d < sphere.radius ) {
-		//solve for t1c
-		float t1c = sqrt( pow(sphere.radius,2) - pow(d,2) );
-		float t1 = tc - t1c;
-		vec3 P1 = ray.origin + ray.direction * t1;
+	if ( intersection.intersects ) {
 
-		vec3 normal = normalize(sphere.origin - P1);
-		light = dot(normal, vec3(1., umouse.x*2-1, umouse.y*-2-1)) *.1;
-
+		red = dot(intersection.normal, vec3(1., umouse.x*2-1, umouse.y*-2-1)) *.1;
+		green = dot(intersection.normal, vec3(1., sin(time)*4.,-4.)) *.1;
 		
 	}
 
-	gl_FragColor = vec4( light, light, light, 1.0);
+	gl_FragColor = vec4( red, green, blue, 1.0);
 	
 }
