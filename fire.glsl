@@ -2,16 +2,74 @@
 precision mediump float;
 #endif
 
+#define PI 3.1415926535897932384626433832795
+
 uniform float time;
 uniform vec2 mouse;
 uniform vec2 resolution;
 
+struct Ray {
+	vec3 origin;
+	vec3 direction;
+};
+
+struct Sphere {
+	vec3 origin;
+	float radius;
+};
+
+// np.clip = clamp()
+vec3 x_rot(vec3 v, float r) {
+	mat3 R = mat3(
+		1.,0.,0.,
+		0., cos(r), -sin(r),
+		0., sin(r), cos(r)
+	);
+	return R * v;
+}
+
+vec3 y_rot(vec3 v, float r) {
+	mat3 R = mat3(
+		cos(r), 0., sin(r),
+		0.,1.,0.,
+		-sin(r),0.,cos(r)
+	);
+	return R * v;
+}
+
+vec3 z_rot(vec3 v, float r) {
+	mat3 R = mat3(
+		cos(r), -sin(r), 0.,
+		sin(r), cos(r), 0.,
+		0.,0.,1.
+	);
+	return R * v;
+}
+
 void main( void ) {	
+
 	vec2 uv = gl_FragCoord.xy / resolution.xy;
+	vec2 rotation = uv - 0.5;
 	vec2 umouse = mouse.xy / resolution.xy;
 
-	bool cursor = length(uv - umouse) < .2;
+	struct Ray player;
+	player.origin = vec3(0.,0.,0.);
+	player.direction = vec3(1.,0.,0.);
 
-	gl_FragColor = vec4( cursor, 0.0 , 0.0, 1.0);
+	struct Sphere sphere;
+	sphere.origin = vec3(10.,0.,0.);
+	sphere.radius = 4.;
+
+	struct Ray ray;
+	ray.origin = player.origin;
+	ray.direction = y_rot(z_rot(player.direction, rotation.x * PI/2), rotation.y * PI/2);
+
+	vec3 L = sphere.origin - ray.origin;
+	float tc = dot(L, ray.direction);
+	float d = sqrt(pow(length(L),2) - pow(tc,2) );
+
+	bool r = ( d > sphere.radius );
+
+	gl_FragColor = vec4( r,r,r, 1.0);
 	
 }
