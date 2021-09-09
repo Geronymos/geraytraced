@@ -8,6 +8,8 @@ uniform float time;
 uniform vec2 mouse;
 uniform vec2 resolution;
 
+uniform vec3 player_pos;
+
 struct Ray {
 	vec3 origin;
 	vec3 direction;
@@ -87,7 +89,7 @@ void main( void ) {
 	vec2 umouse = mouse.xy / resolution.xy;
 
 	struct Ray player;
-	player.origin = vec3(0.,0.,0.);
+	player.origin = player_pos;
 	player.direction = vec3(1.,0.,0.);
 
 	struct Sphere sphere;
