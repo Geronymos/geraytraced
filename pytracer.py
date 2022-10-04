@@ -5,6 +5,7 @@ import sys
 from pygame.locals import *
 import numpy as np
 import math
+import random
 from components.vector_helper import *
 from components.data_types import *
 
@@ -48,14 +49,23 @@ def shader2(x,y):
     return tuple(np.array((*uv, 0), dtype='i'))
 
 def main():
+    global frame
     while True:  # main game loop
         time = pygame.time.get_ticks() / 1000
 
         """ loop over every pixel and execute shader """
-        for x in range(size[0]):
-            for y in range(size[1]):
-                DISPLAYSURF.set_at((x,y), shader(x,y,time))
+        # random.randint(0,size[0])
+        # for x in range(size[0]):
+        #     for y in range(size[1]):
+        #         DISPLAYSURF.set_at((x,y), shader(x,y,time))
+        #     pygame.display.update()
+
+        for _ in range(0, size[0] * size[1]):
+            x = random.randint(0, size[0])
+            y = random.randint(0, size[1])
+            DISPLAYSURF.set_at((x,y), shader(x,y,t))
             pygame.display.update()
+
 
         """ listen for events """
         for event in pygame.event.get():
